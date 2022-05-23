@@ -11,7 +11,7 @@ const renderToDom = (divId, htmlToPrint) => {
 
 // HTML Structure
 const htmlStructure = () => {
-  const domString = `<div id="btn"></div>
+  const domString = `<div id="form-container"></div>
   <div id="lyrics-container"></div>`;
   renderToDom('#app', domString);
 };
@@ -25,26 +25,39 @@ const getLyrics = (artist, song) => new Promise((resolve, reject) => {
 
 // HTML on the dom.
 const lyricsOnDom = (artist, song) => {
-// this is a promise.
+  // this is a promise.
   getLyrics(artist, song).then((response) => {
     renderToDom('#lyrics-container', response.lyrics);
   });
 };
 
-const button = () => {
-  const domString = '<button id="song-btn" class = "btn btn-primary">Click Me</button>';
-  renderToDom('#btn', domString);
+const formOnDom = () => {
+  const domString = `<form>
+  <div class="mb-3">
+    <label for="artist" class="form-label">Artist</label>
+    <input type="text" class="form-control" id="artist" required>
+  </div>
+  <div class="mb-3">
+    <label for="song" class="form-label">Song</label>
+    <input type="text" class="form-control" id="song" required>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>`;
+  renderToDom('#form-container', domString);
 };
 
 const events = () => {
-  document.querySelector('#song-btn').addEventListener('click', () => {
-    lyricsOnDom('prince', 'purple rain');
+  document.querySelector('form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const inputArtist = document.querySelector('#artist').value;
+    const inputSong = document.querySelector('#song').value;
+    lyricsOnDom(inputArtist, inputSong);
   });
 };
 
 const startApp = () => {
   htmlStructure();
-  button();
+  formOnDom();
   events();
 };
 
